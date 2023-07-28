@@ -1,29 +1,22 @@
 #include <linux/bpf.h>
 #include <bpf/bpf_helpers.h>
 
-struct bpf_map_def SEC("maps") my_map = {
-    .type = BPF_MAP_TYPE_ARRAY,
-    .key_size = sizeof(__u32),
-    .value_size = sizeof(__u64),
-    .max_entries = 1,
-};
+struct
+{
+    __uint(type, BPF_MAP_TYPE_ARRAY);
+    __type(key, __u32);
+    __type(value, __u64);
+    __uint(max_entries, 1024);
+} my_map SEC(".maps");
 
-SEC("increment_map")
-int increment_map_prog(struct __sk_buff *skb)
+SEC("socket")
+int map_example(struct __sk_buff *skb)
 {
     __u32 key = 0;
-    __u64 *value;
+    __u64 value = 42;
 
-    value = bpf_map_lookup_elem(&my_map, &key);
-    if (value)
-    {
-        *value += 1;
-    }
-    else
-    {
-        __u64 newValue = 1;
-        bpf_map_update_elem(&my_map, &key, &newValue, BPF_ANY);
-    }
+    bpf_map_update_elem(&my_map, &key, &value, BPF_ANY);
+
     return XDP_PASS;
 }
 
