@@ -44,4 +44,22 @@ int main()
         return 1;
     }
     printf("XDP program pinned the map\n");
+
+    printf("Press Enter to unpin the map from XDP program and detach from interface\n");
+    getchar();
+
+    if (bpf_object__unpin_maps(obj, "/sys/fs/bpf/") < 0)
+    {
+        fprintf(stderr, "ERROR unpinning maps: %s\n", strerror(errno));
+        return 1;
+    }
+    printf("XDP program and map unpinned successfully\n");
+
+    err = bpf_set_link_xdp_fd(ifindex, -1, 0);
+    if (err < 0)
+    {
+        fprintf(stderr, "ERROR detaching XDP program: %s\n", strerror(errno));
+        return 1;
+    }
+    printf("XDP program detached from %s (ifindex: %d)\n", IFNAME, ifindex);
 }
