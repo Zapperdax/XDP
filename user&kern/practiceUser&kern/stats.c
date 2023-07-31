@@ -8,7 +8,7 @@
 int main()
 {
     int mapFd, err;
-    __u32 key;
+    __u32 key, nextKey;
     __u64 value;
 
     mapFd = bpf_obj_get(PATH);
@@ -21,7 +21,7 @@ int main()
     printf("Reading All Values From Map\n");
     do
     {
-        err = bpf_map_get_next_key(mapFd, &key, &key);
+        err = bpf_map_get_next_key(mapFd, &key, &nextKey);
         if (err < 0)
         {
             if (errno == ENOENT)
@@ -35,12 +35,40 @@ int main()
             }
         }
 
-        if (bpf_map_lookup_elem(mapFd, &key, &value) < 0)
+        if (bpf_map_lookup_elem(mapFd, &nextKey, &value) < 0)
         {
             perror("bpf_map_lookup_elem");
             return 1;
         }
-        printf("Key: %u: Value: %lld\n", key, value);
+        printf("Key: %u: Value: %lld\n", nextKey, value);
+        key = nextKey;
+    } while (1);
+
+    key = 0;
+    nextKey = 0;
+    value = 100;
+    do
+    {
+        err = bpf_map_get_next_key(mapFd, &key, &nextKey);
+        if (err < 0)
+        {
+            if (errno == ENOENT)
+            {
+                break;
+            }
+            else
+            {
+                perror("bpf_map_get_next_key");
+                return 1;
+            }
+        }
+        if (bpf_map_update_elem(mapFd, &nextKey, &value, BPF_ANY) < 0)
+        {
+            perror("bpf_map_update_elem");
+            return 1;
+        }
+        printf("Key: %u: Value: %lld\n", nextKey, value);
+        key = nextKey;
     } while (1);
     return 0;
 }

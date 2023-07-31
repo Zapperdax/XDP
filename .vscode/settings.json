@@ -4,7 +4,8 @@
         "bpf.h": "c",
         "bpf_helpers.h": "c",
         "unistd.h": "c",
-        "libbpf.h": "c"
+        "libbpf.h": "c",
+        "if_link.h": "c"
     },
     "C_Cpp.errorSquiggles": "enabled"
 }
