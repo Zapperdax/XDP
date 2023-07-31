@@ -3,7 +3,8 @@
         "if_ether.h": "c",
         "bpf.h": "c",
         "bpf_helpers.h": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "libbpf.h": "c"
     },
     "C_Cpp.errorSquiggles": "enabled"
 }
