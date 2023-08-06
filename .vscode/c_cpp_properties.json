@@ -3,7 +3,8 @@
         {
             "name": "Linux",
             "includePath": [
-                "${workspaceFolder}/**"
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/user&kern/lib/xdp-tools/headers"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",

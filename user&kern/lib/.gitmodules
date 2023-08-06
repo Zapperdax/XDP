@@ -1,0 +1,6 @@
+[submodule "user&kern/xdp-tools"]
+	path = user&kern/xdp-tools
+	url = https://github.com/xdp-project/xdp-tools/
+[submodule "user&kern/libbpf"]
+	path = user&kern/libbpf
+	url = https://github.com/libbpf/libbpf/
