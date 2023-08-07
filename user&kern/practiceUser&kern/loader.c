@@ -6,7 +6,7 @@
 #include <errno.h>
 #include <net/if.h>
 
-#define IFNAME "enp0s31f6"
+#define IFNAME "wlp3s0"
 #define PATH "/sys/fs/bpf/"
 
 int main()
