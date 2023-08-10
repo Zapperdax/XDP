@@ -12,7 +12,7 @@ struct
 {
     __uint(type, BPF_MAP_TYPE_HASH);
     __type(key, struct keys);
-    __type(value, __u32);
+    __type(value, count);
     __uint(max_entries, 1024);
 } ip_and_port_map SEC(".maps");
 
@@ -29,7 +29,6 @@ int CatchingIPsAndPortsProg(struct xdp_md *ctx)
     {
         __u32 srcIP;
         __u32 destIP;
-        __u32 value = 0;
         __u16 srcPort = 0;
         __u16 destPort = 0;
         __u8 protocol = ip->protocol;
@@ -68,8 +67,8 @@ int CatchingIPsAndPortsProg(struct xdp_md *ctx)
             .srcPort = srcPort,
             .destPort = destPort,
         };
-
-        bpf_map_update_elem(&ip_and_port_map, &info, &value, BPF_ANY);
+        __sync_fetch_and_add(&count, 1);
+        bpf_map_update_elem(&ip_and_port_map, &info, &count, BPF_ANY);
     }
 
 out:

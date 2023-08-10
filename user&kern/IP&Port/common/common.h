@@ -8,4 +8,6 @@ struct keys
     __u16 srcPort;
     __u16 destPort;
 };
+
+__u32 count = 0;
 #endif
